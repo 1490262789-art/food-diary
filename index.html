@@ -3,597 +3,407 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>💕 我们的饮食日记</title>
+<title>饮食日记</title>
 <style>
   :root {
-    --pink: #f7a8b8; --pink-light: #fef0f4; --pink-dark: #e8879a;
-    --white: #ffffff; --text: #4a3442; --muted: #9b8593;
-    --border: #f5d5e0; --card: #ffffff; --shadow: 0 2px 16px rgba(247,168,184,0.15);
-    --radius: 16px; --radius-sm: 10px;
+    --bg: #faf8f4; --card: #ffffff; --border: #e5dfd5;
+    --text: #3a3835; --muted: #9c9487; --accent: #7b6e5d;
+    --input-bg: #f6f3ed; --shadow: 0 1px 3px rgba(0,0,0,0.04);
+    --radius: 2px;
   }
   * { margin:0; padding:0; box-sizing:border-box; }
   body {
-    font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
-    background: linear-gradient(135deg, #fef0f4 0%, #fff5f7 50%, #fdf2f5 100%);
-    color: var(--text); line-height: 1.6; min-height: 100vh;
+    font-family: -apple-system, 'PingFang SC', 'Hiragino Sans', 'Microsoft YaHei', sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.8; min-height: 100vh;
+    font-weight: 300; letter-spacing: 0.02em;
   }
   header {
-    background: linear-gradient(135deg, #f7a8b8, #f5a0b2);
-    color: #fff; padding: 20px 16px 18px; text-align: center;
-    box-shadow: 0 2px 12px rgba(247,168,184,0.3);
+    background: var(--card); border-bottom: 1px solid var(--border);
+    padding: 28px 16px 22px; text-align: center;
     position: sticky; top: 0; z-index: 100;
   }
-  header h1 { font-size: 1.4em; margin-bottom: 2px; letter-spacing: 1px; }
-  header .byline { font-size: 0.8em; opacity: 0.85; }
+  header h1 { font-size: 1.1em; font-weight: 400; letter-spacing: 0.08em; color: var(--text); }
+  header .byline { font-size: 0.75em; color: var(--muted); margin-top: 4px; letter-spacing: 0.04em; }
 
   .name-bar {
-    background: var(--white); border-bottom: 1px solid var(--border);
-    padding: 10px 16px; display: flex; align-items: center; gap: 10px;
-    position: sticky; top: 72px; z-index: 99;
+    background: var(--card); border-bottom: 1px solid var(--border);
+    padding: 12px 20px; display: flex; align-items: center; gap: 12px;
+    position: sticky; top: 92px; z-index: 99;
   }
-  .name-bar label { font-size: 0.9em; white-space: nowrap; }
+  .name-bar label { font-size: 0.82em; color: var(--muted); white-space: nowrap; }
   .name-bar input {
-    flex: 1; border: 2px solid var(--border); border-radius: 20px;
-    padding: 8px 14px; font-size: 0.9em; outline: none; background: var(--pink-light);
-    transition: border 0.2s;
+    flex: 1; border: none; border-bottom: 1px solid var(--border);
+    padding: 6px 0; font-size: 0.9em; outline: none; background: transparent;
+    color: var(--text); font-family: inherit; letter-spacing: 0.04em;
+    border-radius: 0;
   }
-  .name-bar input:focus { border-color: var(--pink); }
+  .name-bar input:focus { border-bottom-color: var(--accent); }
   .name-bar .badge {
-    background: var(--pink-light); color: var(--pink-dark);
-    padding: 4px 12px; border-radius: 20px; font-size: 0.78em; font-weight: 600;
+    color: var(--muted); font-size: 0.75em; font-weight: 400;
+    padding: 2px 10px; border: 1px solid var(--border);
   }
 
-  .container { max-width: 680px; margin: 0 auto; padding: 16px; }
-  .section { margin-bottom: 20px; }
+  .container { max-width: 640px; margin: 0 auto; padding: 24px 20px; }
+  .section { margin-bottom: 32px; }
   .section-title {
-    font-size: 1.05em; font-weight: 700; color: var(--pink-dark);
-    margin-bottom: 12px; display: flex; align-items: center; gap: 6px;
+    font-size: 0.85em; font-weight: 400; color: var(--muted);
+    margin-bottom: 16px; letter-spacing: 0.06em; text-transform: uppercase;
   }
 
   .form-card {
-    background: var(--card); border-radius: var(--radius);
-    padding: 18px 16px; box-shadow: var(--shadow);
+    background: var(--card); padding: 24px 20px;
+    box-shadow: var(--shadow); border: 1px solid var(--border);
   }
-  .form-row { margin-bottom: 12px; }
+  .form-row { margin-bottom: 18px; }
   .form-label {
-    display: block; font-size: 0.85em; font-weight: 600;
-    color: var(--pink-dark); margin-bottom: 4px;
+    display: block; font-size: 0.75em; color: var(--muted);
+    margin-bottom: 6px; letter-spacing: 0.05em;
   }
   .form-input, .form-textarea, .form-select {
-    width: 100%; border: 2px solid var(--border); border-radius: var(--radius-sm);
-    padding: 10px 12px; font-size: 0.9em; font-family: inherit;
-    background: var(--pink-light); color: var(--text);
-    outline: none; transition: border 0.2s; resize: vertical;
+    width: 100%; border: none; border-bottom: 1px solid var(--border);
+    padding: 8px 0; font-size: 0.9em; font-family: inherit;
+    background: transparent; color: var(--text);
+    outline: none; border-radius: 0;
+    letter-spacing: 0.03em; resize: vertical;
   }
-  .form-input:focus, .form-textarea:focus, .form-select:focus { border-color: var(--pink); background: #fff; }
-  .form-textarea { min-height: 50px; }
-  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .form-input:focus, .form-textarea:focus, .form-select:focus { border-bottom-color: var(--accent); }
+  .form-textarea { min-height: 40px; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 20px; }
 
   .btn {
-    padding: 12px; border: none; border-radius: var(--radius-sm);
-    font-size: 1em; font-weight: 700; cursor: pointer; font-family: inherit;
-    transition: transform 0.15s, box-shadow 0.15s;
+    padding: 12px 24px; border: 1px solid var(--border); background: var(--card);
+    font-size: 0.85em; cursor: pointer; font-family: inherit;
+    letter-spacing: 0.06em; color: var(--text); transition: all 0.2s;
+    border-radius: var(--radius);
   }
-  .btn:active { transform: scale(0.97); }
+  .btn:hover { border-color: var(--accent); }
+  .btn:active { background: #f5f2ed; }
   .btn-primary {
-    width: 100%; background: linear-gradient(135deg, #f7a8b8, #e8879a);
-    color: #fff; box-shadow: 0 4px 14px rgba(247,168,184,0.35); margin-top: 4px;
+    width: 100%; background: var(--accent); color: #fff; border: none;
+    padding: 14px; margin-top: 8px; letter-spacing: 0.08em;
   }
-  .btn-outline {
-    background: var(--white); color: var(--pink-dark);
-    border: 2px solid var(--pink); margin-top: 8px;
-  }
-  .btn-sm { padding: 6px 14px; font-size: 0.82em; width: auto; border-radius: 20px; }
+  .btn-primary:hover { background: #6b5f52; }
+  .btn-sm { padding: 6px 14px; font-size: 0.78em; width: auto; }
 
-  /* ===== Photo Upload ===== */
+  /* Photo */
   .photo-area {
-    border: 2px dashed var(--pink); border-radius: var(--radius-sm);
-    padding: 14px; text-align: center; cursor: pointer; margin-top: 4px;
-    background: var(--pink-light); transition: background 0.2s;
+    border: 1px dashed var(--border); padding: 18px; text-align: center; cursor: pointer;
+    background: var(--input-bg); transition: background 0.2s;
   }
-  .photo-area:hover { background: #fce4ec; }
-  .photo-area .camera-icon { font-size: 2em; display: block; margin-bottom: 4px; }
-  .photo-area .hint { font-size: 0.82em; color: var(--muted); }
-  .photo-area input[type="file"] { display: none; }
-  .photo-preview {
-    display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px;
-  }
+  .photo-area:hover { background: #eeebe5; }
+  .photo-area span { display: block; color: var(--muted); font-size: 0.82em; letter-spacing: 0.04em; }
+  .photo-area span:first-child { font-size: 1.8em; margin-bottom: 2px; }
+  .photo-preview { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
   .photo-preview .thumb {
-    width: 64px; height: 64px; border-radius: 8px; object-fit: cover;
-    border: 2px solid var(--border); cursor: pointer;
+    width: 56px; height: 56px; object-fit: cover; cursor: pointer;
+    border: 1px solid var(--border);
   }
   .photo-preview .thumb-wrap { position: relative; }
   .photo-preview .remove-btn {
     position: absolute; top: -6px; right: -6px;
-    background: #e8879a; color: #fff; border: none; border-radius: 50%;
-    width: 20px; height: 20px; font-size: 0.7em; cursor: pointer; line-height: 20px;
+    background: var(--text); color: #fff; border: none;
+    width: 18px; height: 18px; font-size: 0.65em; cursor: pointer;
+    border-radius: 50%; line-height: 18px; text-align: center;
   }
 
-  /* ===== Image Modal ===== */
+  /* Modal */
   .modal-overlay {
     position: fixed; top:0; left:0; width:100%; height:100%;
-    background: rgba(0,0,0,0.85); z-index: 9999; display: flex;
+    background: rgba(58,56,53,0.92); z-index: 9999; display: flex;
     align-items: center; justify-content: center; cursor: pointer;
   }
-  .modal-overlay img { max-width: 95%; max-height: 90%; border-radius: 8px; }
+  .modal-overlay img { max-width: 95%; max-height: 90%; }
 
-  /* ===== Status ===== */
-  .status-msg { text-align: center; padding: 20px; color: var(--muted); font-size: 0.9em; }
+  /* Status */
+  .status-msg { text-align: center; padding: 32px 20px; color: var(--muted); font-size: 0.85em; }
   .spinner {
-    display: inline-block; width: 20px; height: 20px; border: 3px solid var(--border);
-    border-top-color: var(--pink); border-radius: 50%; animation: spin 0.6s linear infinite;
+    display: inline-block; width: 16px; height: 16px; border: 1px solid var(--border);
+    border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite;
     margin-right: 8px; vertical-align: middle;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
   .toast {
-    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-    background: #4a3442; color: #fff; padding: 10px 24px; border-radius: 24px;
-    font-size: 0.88em; z-index: 9998; opacity: 0; transition: opacity 0.3s; pointer-events: none;
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+    background: #3a3835; color: #faf8f4; padding: 10px 24px;
+    font-size: 0.82em; z-index: 9998; opacity: 0; transition: opacity 0.3s;
+    pointer-events: none; letter-spacing: 0.04em;
   }
   .toast.show { opacity: 1; }
 
-  /* ===== Filter ===== */
-  .filter-bar {
-    display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 12px;
-  }
+  /* Filter */
+  .filter-bar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 16px; }
   .filter-bar input[type="date"] {
-    border: 2px solid var(--border); border-radius: 20px;
-    padding: 6px 12px; font-size: 0.85em; background: var(--white);
-    outline: none; font-family: inherit;
+    border: 1px solid var(--border); padding: 6px 12px; font-size: 0.82em;
+    background: var(--card); outline: none; font-family: inherit; color: var(--text);
   }
-  .filter-bar input[type="date"]:focus { border-color: var(--pink); }
+  .filter-bar input[type="date"]:focus { border-color: var(--accent); }
 
-  /* ===== Table ===== */
+  /* Table */
   .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
   table {
-    width: 100%; border-collapse: collapse; font-size: 0.83em;
-    background: var(--card); border-radius: var(--radius); overflow: hidden;
-    box-shadow: var(--shadow);
+    width: 100%; border-collapse: collapse; font-size: 0.78em;
+    background: var(--card); box-shadow: var(--shadow); border: 1px solid var(--border);
   }
-  thead { background: var(--pink-light); }
+  thead { background: #f5f2ed; }
   th {
-    text-align: left; padding: 10px 8px; color: var(--pink-dark);
-    font-weight: 700; font-size: 0.78em; white-space: nowrap;
+    text-align: left; padding: 10px 10px; color: var(--muted); font-weight: 400;
+    font-size: 0.85em; white-space: nowrap; letter-spacing: 0.04em;
   }
-  td { padding: 10px 8px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  td { padding: 10px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
   tr:last-child td { border-bottom: none; }
-  tr:hover td { background: #fef9fa; }
+  tr:hover td { background: #faf8f5; }
 
   .tag-badge {
-    display: inline-block; padding: 2px 8px; border-radius: 10px;
-    font-size: 0.78em; font-weight: 600; white-space: nowrap;
+    display: inline-block; padding: 1px 8px; font-size: 0.8em;
+    border: 1px solid var(--border); white-space: nowrap;
   }
-  .tag-home { background: #e8f5e9; color: #2d7d46; }
-  .tag-takeout { background: #fff3e0; color: #e65100; }
-  .tag-dessert { background: #fce4ec; color: #c2185b; }
-  .tag-spicy { background: #ffebee; color: #c62828; }
-  .tag-light { background: #e0f7fa; color: #00695c; }
-  .tag-other { background: #f3e5f5; color: #6a1b9a; }
-
   .table-thumb {
-    width: 40px; height: 40px; border-radius: 6px; object-fit: cover;
-    cursor: pointer; border: 1px solid var(--border);
+    width: 36px; height: 36px; object-fit: cover; cursor: pointer;
   }
-
   .delete-btn {
-    background: none; border: none; cursor: pointer; font-size: 1.1em;
-    opacity: 0.5; transition: opacity 0.2s; padding: 2px 4px;
+    background: none; border: none; cursor: pointer; font-size: 0.9em;
+    color: var(--muted); padding: 2px 4px; transition: color 0.2s;
   }
-  .delete-btn:hover { opacity: 1; }
+  .delete-btn:hover { color: #c44; }
 
-  .empty-state { text-align: center; padding: 40px 20px; color: var(--muted); }
-  .empty-state .icon { font-size: 3em; margin-bottom: 8px; }
+  .empty-state { text-align: center; padding: 48px 20px; color: var(--muted); }
+  .empty-state .icon { font-size: 2em; margin-bottom: 10px; opacity: 0.4; }
 
-  footer {
-    text-align: center; padding: 20px; color: var(--muted); font-size: 0.78em;
-  }
+  footer { text-align: center; padding: 32px 20px; color: var(--muted); font-size: 0.72em; letter-spacing: 0.06em; }
 
   @media (max-width: 480px) {
-    header h1 { font-size: 1.2em; }
+    header h1 { font-size: 1em; }
     .form-grid { grid-template-columns: 1fr; }
-    th, td { padding: 8px 4px; font-size: 0.76em; }
-    .name-bar { top: 64px; }
+    th, td { padding: 8px 6px; font-size: 0.73em; }
+    .name-bar { top: 78px; }
   }
 </style>
 </head>
 <body>
 
 <header>
-  <h1>💕 我们的饮食日记</h1>
-  <div class="byline">异地也要好好吃饭 · 拍照分享每一餐</div>
+  <h1>饮食日记</h1>
+  <div class="byline">记录每一餐</div>
 </header>
 
 <div class="name-bar">
-  <label for="userName">👤 我是：</label>
-  <input type="text" id="userName" placeholder="输入你的名字…" maxlength="10">
-  <span class="badge" id="nameBadge">未设置</span>
+  <label for="userName">姓名</label>
+  <input type="text" id="userName" placeholder="输入你的名字" maxlength="10">
+  <span class="badge" id="nameBadge">-</span>
 </div>
 
 <div class="container">
 
-  <!-- ===== 打卡表单 ===== -->
   <div class="section">
-    <div class="section-title">📝 今天吃了什么</div>
+    <div class="section-title">记录今日</div>
     <div class="form-card">
       <div class="form-row">
-        <label class="form-label" for="recordDate">📅 日期</label>
+        <label class="form-label" for="recordDate">日期</label>
         <input type="date" class="form-input" id="recordDate">
       </div>
-
       <div class="form-grid">
-        <div class="form-row"><label class="form-label" for="breakfast">🌅 早餐</label><textarea class="form-textarea" id="breakfast" placeholder="吃了什么…" rows="1"></textarea></div>
-        <div class="form-row"><label class="form-label" for="lunch">☀️ 午餐</label><textarea class="form-textarea" id="lunch" placeholder="吃了什么…" rows="1"></textarea></div>
-        <div class="form-row"><label class="form-label" for="dinner">🌙 晚餐</label><textarea class="form-textarea" id="dinner" placeholder="吃了什么…" rows="1"></textarea></div>
-        <div class="form-row"><label class="form-label" for="snacks">🍪 零食加餐</label><textarea class="form-textarea" id="snacks" placeholder="奶茶？薯片？…" rows="1"></textarea></div>
+        <div class="form-row"><label class="form-label" for="breakfast">早餐</label><textarea class="form-textarea" id="breakfast" placeholder="吃了什么" rows="1"></textarea></div>
+        <div class="form-row"><label class="form-label" for="lunch">午餐</label><textarea class="form-textarea" id="lunch" placeholder="吃了什么" rows="1"></textarea></div>
+        <div class="form-row"><label class="form-label" for="dinner">晚餐</label><textarea class="form-textarea" id="dinner" placeholder="吃了什么" rows="1"></textarea></div>
+        <div class="form-row"><label class="form-label" for="snacks">加餐</label><textarea class="form-textarea" id="snacks" placeholder="零食/饮品" rows="1"></textarea></div>
       </div>
-
       <div class="form-grid">
         <div class="form-row">
-          <label class="form-label" for="water">💧 今日饮水</label>
-          <input type="text" class="form-input" id="water" placeholder="如：1500ml / 5杯">
+          <label class="form-label" for="water">饮水</label>
+          <input type="text" class="form-input" id="water" placeholder="1500ml">
         </div>
         <div class="form-row">
-          <label class="form-label" for="foodTag">🏷️ 饮食标签</label>
+          <label class="form-label" for="foodTag">标签</label>
           <select class="form-select" id="foodTag">
-            <option value="">— 选一个 —</option>
-            <option value="家常菜">🍳 家常菜</option>
-            <option value="外卖">📦 外卖</option>
-            <option value="甜品">🍰 甜品</option>
-            <option value="重油重辣">🌶️ 重油重辣</option>
-            <option value="清淡减脂">🥗 清淡减脂</option>
-            <option value="其他">📌 其他</option>
+            <option value="">-</option>
+            <option value="家常菜">家常菜</option>
+            <option value="外卖">外卖</option>
+            <option value="甜品">甜品</option>
+            <option value="重油重辣">重油重辣</option>
+            <option value="清淡减脂">清淡减脂</option>
+            <option value="其他">其他</option>
           </select>
         </div>
       </div>
-
       <div class="form-row">
-        <label class="form-label">📸 拍照记录（可多张·自动压缩）</label>
+        <label class="form-label">照片（可多张·自动压缩）</label>
         <div class="photo-area" onclick="document.getElementById('photoInput').click()">
-          <span class="camera-icon">📷</span>
-          <span class="hint">点击拍照或选择照片</span>
+          <span>＋</span>
+          <span>拍照或选择照片</span>
         </div>
         <input type="file" id="photoInput" accept="image/*" capture="environment" multiple onchange="handlePhotos(this)" style="display:none;">
         <div class="photo-preview" id="photoPreview"></div>
       </div>
-
       <div class="form-row">
-        <label class="form-label" for="mood">💬 心情备注</label>
-        <textarea class="form-textarea" id="mood" placeholder="今天的心情…想跟你说的话…" rows="1"></textarea>
+        <label class="form-label" for="mood">备注</label>
+        <textarea class="form-textarea" id="mood" placeholder="想说的话" rows="1"></textarea>
       </div>
-
-      <button class="btn btn-primary" id="submitBtn" onclick="submitRecord()">💾 记录今天的饮食</button>
+      <button class="btn btn-primary" id="submitBtn" onclick="submitRecord()">保存记录</button>
     </div>
   </div>
 
-  <!-- ===== 数据展示 ===== -->
   <div class="section">
-    <div class="section-title">📋 我们的饮食记录</div>
+    <div class="section-title">历史记录</div>
     <div class="filter-bar">
       <input type="date" id="filterDate" onchange="applyFilter()">
-      <button class="btn btn-sm btn-outline" onclick="clearFilter()">✕ 清除筛选</button>
-      <button class="btn btn-sm btn-outline" onclick="exportCSV()">📥 导出 CSV</button>
-      <span style="margin-left:auto;font-size:0.8em;color:var(--muted);" id="recordCount"></span>
+      <button class="btn btn-sm" onclick="clearFilter()">清除筛选</button>
+      <button class="btn btn-sm" onclick="exportCSV()">导出 CSV</button>
+      <span style="margin-left:auto;font-size:0.78em;color:var(--muted);" id="recordCount"></span>
     </div>
-
-    <div id="loadingMsg" class="status-msg"><span class="spinner"></span>加载中…</div>
-
+    <div id="loadingMsg" class="status-msg"><span class="spinner"></span>加载中</div>
     <div class="table-wrap" id="tableWrap" style="display:none;">
       <table>
-        <thead>
-          <tr>
-            <th>日期</th><th>谁</th><th>照片</th><th>🌅早餐</th><th>☀️午餐</th>
-            <th>🌙晚餐</th><th>🍪加餐</th><th>💧饮水</th><th>🏷️标签</th><th>💬心情</th><th></th>
-          </tr>
-        </thead>
+        <thead><tr><th>日期</th><th>姓名</th><th>照片</th><th>早餐</th><th>午餐</th><th>晚餐</th><th>加餐</th><th>饮水</th><th>标签</th><th>备注</th><th></th></tr></thead>
         <tbody id="tableBody"></tbody>
       </table>
     </div>
-
-    <div class="empty-state" id="emptyState" style="display:none;">
-      <div class="icon">🍽️</div>
-      <p>还没有记录～快来打卡第一顿吧！记得拍照 📸</p>
-    </div>
+    <div class="empty-state" id="emptyState" style="display:none;"><div class="icon">—</div><p>暂无记录</p></div>
   </div>
 
 </div>
 
 <div class="toast" id="toast"></div>
 <div class="modal-overlay" id="imageModal" style="display:none;" onclick="closeModal()">
-  <img id="modalImg" src="" alt="食物照片">
+  <img id="modalImg" src="" alt="">
 </div>
 
-<footer>我们的饮食日记 · 异地也要好好吃饭 💕</footer>
+<footer>饮食日记</footer>
 
-<!-- ==================== SCRIPT ==================== -->
 <script>
-/* ============================================================
-   配置区域 —— 注册 JSONBin 后替换以下两个值
-   ============================================================ */
 const JSONBIN_API_KEY = '$2a$10$LaFzu8ik4tTzNy35YLBF1OcoTogoIbWJUQ4/SpkQ.0M3UUhjGeyRO';
 const JSONBIN_BIN_ID  = '6a453823f5f4af5e294e5db2';
-/* ============================================================ */
-
 const API_BASE = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`;
 const HEADERS = { 'X-Master-Key': JSONBIN_API_KEY, 'Content-Type': 'application/json' };
 
-let allRecords = [];
-let currentFilter = '';
-let pendingPhotos = []; // base64 strings waiting to be saved
+let allRecords=[],currentFilter='',pendingPhotos=[];
+const $=id=>document.getElementById(id);
+const submitBtn=$('submitBtn'),tableBody=$('tableBody'),tableWrap=$('tableWrap');
+const emptyState=$('emptyState'),loadingMsg=$('loadingMsg'),recordCount=$('recordCount'),toast=$('toast');
 
-const $ = id => document.getElementById(id);
-const userName = $('userName');
-const submitBtn = $('submitBtn');
-const tableBody = $('tableBody');
-const tableWrap = $('tableWrap');
-const emptyState = $('emptyState');
-const loadingMsg = $('loadingMsg');
-const recordCount = $('recordCount');
-const toast = $('toast');
-
-// ====== Init ======
-$('recordDate').value = new Date().toISOString().slice(0, 10);
-userName.value = localStorage.getItem('foodDiary_name') || '';
+$('recordDate').value=new Date().toISOString().slice(0,10);
+$('userName').value=localStorage.getItem('foodDiary_name')||'';
 updateNameBadge();
 fetchRecords();
+$('userName').addEventListener('input',()=>{localStorage.setItem('foodDiary_name',$('userName').value.trim());updateNameBadge();});
+function updateNameBadge(){const n=$('userName').value.trim();$('nameBadge').textContent=n||'-';}
 
-userName.addEventListener('input', () => {
-  localStorage.setItem('foodDiary_name', userName.value.trim());
-  updateNameBadge();
-});
-
-function updateNameBadge() {
-  const name = userName.value.trim();
-  $('nameBadge').textContent = name || '未设置';
-  $('nameBadge').style.background = name ? '#fce4ec' : '#f5f5f5';
-  $('nameBadge').style.color = name ? '#c2185b' : '#9b8593';
-}
-
-// ====== Toast ======
 let toastTimer;
-function showToast(msg) {
-  toast.textContent = msg; toast.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
+function showToast(msg){toast.textContent=msg;toast.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.classList.remove('show'),2200);}
+
+function handlePhotos(input){
+  const files=Array.from(input.files);if(!files.length)return;
+  if(pendingPhotos.length+files.length>5){showToast('最多5张照片');input.value='';return;}
+  showToast('压缩中');
+  let done=0;
+  files.forEach(file=>{
+    const r=new FileReader();
+    r.onload=function(e){
+      const img=new Image();
+      img.onload=function(){
+        const c=document.createElement('canvas'),max=400;
+        let w=img.width,h=img.height;
+        if(w>h&&w>max){h=h*max/w;w=max;}else if(h>max){w=w*max/h;h=max;}
+        c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);
+        pendingPhotos.push(c.toDataURL('image/jpeg',0.6));
+        done++;if(done===files.length){renderPreview();showToast('已压缩');}
+      };img.src=e.target.result;
+    };r.readAsDataURL(file);
+  });input.value='';
 }
+function renderPreview(){$('photoPreview').innerHTML=pendingPhotos.map((p,i)=>'<div class="thumb-wrap"><img class="thumb" src="'+p+'" onclick="event.stopPropagation();openModal(\''+p+'\')"><button class="remove-btn" onclick="event.stopPropagation();removePhoto('+i+')">×</button></div>').join('');}
+function removePhoto(i){pendingPhotos.splice(i,1);renderPreview();}
+function openModal(s){$('modalImg').src=s;$('imageModal').style.display='flex';}
+function closeModal(){$('imageModal').style.display='none';}
 
-// ====== Photo Handling ======
-function handlePhotos(input) {
-  const files = Array.from(input.files);
-  if (files.length === 0) return;
-  // Max 5 photos per record to keep JSONBin payload reasonable
-  if (pendingPhotos.length + files.length > 5) {
-    showToast('最多 5 张照片哦～');
-    input.value = '';
-    return;
-  }
-
-  showToast('🖼️ 正在压缩…');
-
-  let processed = 0;
-  files.forEach(file => {
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      const img = new Image();
-      img.onload = function() {
-        // Resize to max 400px on the long side, JPEG quality 0.6 → ~15-40KB each
-        const canvas = document.createElement('canvas');
-        const maxDim = 400;
-        let w = img.width, h = img.height;
-        if (w > h && w > maxDim) { h = h * maxDim / w; w = maxDim; }
-        else if (h > maxDim) { w = w * maxDim / h; h = maxDim; }
-        canvas.width = w; canvas.height = h;
-        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-        const base64 = canvas.toDataURL('image/jpeg', 0.6);
-        pendingPhotos.push(base64);
-        processed++;
-        if (processed === files.length) {
-          renderPhotoPreview();
-          showToast('✅ 照片已压缩（约 ' + Math.round(base64.length/1024) + 'KB/张）');
-        }
-      };
-      img.src = e.target.result;
-    };
-    reader.readAsDataURL(file);
-  });
-  input.value = '';
-}
-
-function renderPhotoPreview() {
-  const container = $('photoPreview');
-  container.innerHTML = pendingPhotos.map((p, i) =>
-    `<div class="thumb-wrap">
-      <img class="thumb" src="${p}" onclick="event.stopPropagation();openModal('${p}')">
-      <button class="remove-btn" onclick="event.stopPropagation();removePhoto(${i})">×</button>
-    </div>`
-  ).join('');
-}
-
-function removePhoto(i) {
-  pendingPhotos.splice(i, 1);
-  renderPhotoPreview();
-}
-
-// ====== Image Modal ======
-function openModal(src) {
-  $('modalImg').src = src;
-  $('imageModal').style.display = 'flex';
-}
-function closeModal() {
-  $('imageModal').style.display = 'none';
-}
-
-// ====== Fetch ======
-async function fetchRecords() {
-  loadingMsg.style.display = 'block'; tableWrap.style.display = 'none'; emptyState.style.display = 'none';
-  try {
-    const res = await fetch(`${API_BASE}/latest`, { headers: HEADERS });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const json = await res.json();
-    allRecords = (json.record && json.record.records) ? json.record.records : [];
-  } catch (e) {
-    console.error(e); allRecords = [];
-    showToast('⚠️ 加载失败，请检查 JSONBin 配置');
-  }
+async function fetchRecords(){
+  loadingMsg.style.display='block';tableWrap.style.display='none';emptyState.style.display='none';
+  try{
+    const res=await fetch(API_BASE+'/latest',{headers:HEADERS});
+    if(!res.ok)throw new Error(res.status);
+    const j=await res.json();
+    allRecords=(j.record&&j.record.records)?j.record.records:[];
+  }catch(e){console.error(e);allRecords=[];showToast('加载失败');}
   renderTable();
 }
 
-// ====== Submit ======
-async function submitRecord() {
-  const name = userName.value.trim();
-  if (!name) { showToast('请先输入你的名字 👤'); return; }
-
-  const record = {
-    id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
-    date: $('recordDate').value,
-    name: name,
-    breakfast: $('breakfast').value.trim(),
-    lunch: $('lunch').value.trim(),
-    dinner: $('dinner').value.trim(),
-    snacks: $('snacks').value.trim(),
-    water: $('water').value.trim(),
-    tag: $('foodTag').value,
-    mood: $('mood').value.trim(),
-    photos: [...pendingPhotos],
-    createdAt: new Date().toISOString()
+async function submitRecord(){
+  const name=$('userName').value.trim();
+  if(!name){showToast('请输入姓名');return;}
+  const record={
+    id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),
+    date:$('recordDate').value,name,
+    breakfast:$('breakfast').value.trim(),lunch:$('lunch').value.trim(),
+    dinner:$('dinner').value.trim(),snacks:$('snacks').value.trim(),
+    water:$('water').value.trim(),tag:$('foodTag').value,
+    mood:$('mood').value.trim(),photos:[...pendingPhotos],
+    createdAt:new Date().toISOString()
   };
-
-  if (!record.date) { showToast('请选择日期 📅'); return; }
-  if (!record.breakfast && !record.lunch && !record.dinner && !record.snacks && record.photos.length === 0) {
-    showToast('至少填一顿，或者拍张照吧～ 🍽️'); return;
-  }
-
-  submitBtn.disabled = true; submitBtn.textContent = '⏳ 提交中…';
-
-  try {
-    const fetchRes = await fetch(`${API_BASE}/latest`, { headers: HEADERS });
-    let serverData = { records: [] };
-    if (fetchRes.ok) {
-      const json = await fetchRes.json();
-      let d = json.record;
-      if (Array.isArray(d)) d = { records: d };
-      if (d && d.records) serverData = d;
-    }
-    serverData.records.push(record);
-
-    const putRes = await fetch(API_BASE, { method: 'PUT', headers: HEADERS, body: JSON.stringify(serverData) });
-    if (!putRes.ok) throw new Error(`HTTP ${putRes.status}`);
-
-    // Clear form
-    ['breakfast','lunch','dinner','snacks','water','mood'].forEach(id => $('id').value = '');
-    $('foodTag').value = '';
-    pendingPhotos = [];
-    $('photoPreview').innerHTML = '';
-
-    showToast('✅ 记录成功！TA 现在就能看到啦～');
+  if(!record.date){showToast('请选择日期');return;}
+  if(!record.breakfast&&!record.lunch&&!record.dinner&&!record.snacks&&!record.photos.length){showToast('至少填一项');return;}
+  submitBtn.disabled=true;submitBtn.textContent='保存中';
+  try{
+    const fr=await fetch(API_BASE+'/latest',{headers:HEADERS});
+    let d=fr.ok?(await fr.json()).record:{records:[]};
+    if(Array.isArray(d))d={records:d};
+    if(!d||!d.records)d={records:[]};
+    d.records.push(record);
+    const pr=await fetch(API_BASE,{method:'PUT',headers:HEADERS,body:JSON.stringify(d)});
+    if(!pr.ok)throw new Error(pr.status);
+    ['breakfast','lunch','dinner','snacks','water','mood'].forEach(id=>$(id).value='');
+    $('foodTag').value='';pendingPhotos=[];$('photoPreview').innerHTML='';
+    showToast('已保存');
     await fetchRecords();
-  } catch (e) {
-    console.error(e);
-    showToast('❌ 提交失败，请检查网络');
-  }
-  submitBtn.disabled = false; submitBtn.textContent = '💾 记录今天的饮食';
+  }catch(e){console.error(e);showToast('保存失败，请检查网络');}
+  submitBtn.disabled=false;submitBtn.textContent='保存记录';
 }
 
-// ====== Render ======
-function renderTable() {
-  tableBody.innerHTML = '';
-  loadingMsg.style.display = 'none';
-
-  let records = [...allRecords];
-  if (currentFilter) records = records.filter(r => r.date === currentFilter);
-  records.sort((a, b) => {
-    if (a.date !== b.date) return b.date.localeCompare(a.date);
-    return (b.createdAt || '').localeCompare(a.createdAt || '');
-  });
-
-  recordCount.textContent = `共 ${records.length} 条`;
-
-  if (records.length === 0) {
-    tableWrap.style.display = 'none'; emptyState.style.display = 'block'; return;
-  }
-
-  const currentName = userName.value.trim();
-  const tagClassMap = { '家常菜':'tag-home','外卖':'tag-takeout','甜品':'tag-dessert','重油重辣':'tag-spicy','清淡减脂':'tag-light' };
-
-  records.forEach(r => {
-    const tr = document.createElement('tr');
-    const canDelete = (r.name === currentName);
-    const tagCls = tagClassMap[r.tag] || 'tag-other';
-    const tagHtml = r.tag ? `<span class="tag-badge ${tagCls}">${r.tag}</span>` : '';
-    const timeStr = r.createdAt ? new Date(r.createdAt).toLocaleTimeString('zh-CN', { hour:'2-digit', minute:'2-digit' }) : '';
-
-    // Photo thumbnails
-    let photoHtml = '-';
-    if (r.photos && r.photos.length > 0) {
-      photoHtml = r.photos.map(p =>
-        `<img class="table-thumb" src="${escAttr(p)}" onclick="event.stopPropagation();openModal('${escAttr(p)}')" title="点击放大">`
-      ).join('');
-    }
-
-    tr.innerHTML = `
-      <td nowrap>${r.date}<br><small style="color:var(--muted)">${timeStr}</small></td>
-      <td nowrap><strong>${escHtml(r.name)}</strong></td>
-      <td style="min-width:50px;">${photoHtml}</td>
-      <td>${escHtml(r.breakfast || '-')}</td>
-      <td>${escHtml(r.lunch || '-')}</td>
-      <td>${escHtml(r.dinner || '-')}</td>
-      <td>${escHtml(r.snacks || '-')}</td>
-      <td nowrap>${escHtml(r.water || '-')}</td>
-      <td nowrap>${tagHtml}</td>
-      <td style="max-width:120px;">${escHtml(r.mood || '-')}</td>
-      <td>${canDelete ? `<button class="delete-btn" onclick="deleteRecord('${r.id}')">🗑️</button>` : ''}</td>
-    `;
+function renderTable(){
+  tableBody.innerHTML='';loadingMsg.style.display='none';
+  let recs=[...allRecords];
+  if(currentFilter)recs=recs.filter(r=>r.date===currentFilter);
+  recs.sort((a,b)=>(b.date!==a.date?b.date.localeCompare(a.date):(b.createdAt||'').localeCompare(a.createdAt||'')));
+  recordCount.textContent=recs.length+' 条';
+  if(!recs.length){tableWrap.style.display='none';emptyState.style.display='block';return;}
+  const cn=$('userName').value.trim();
+  recs.forEach(r=>{
+    const tr=document.createElement('tr'),del=r.name===cn;
+    const t=r.tag?'<span class="tag-badge">'+esc(r.tag)+'</span>':'';
+    const tm=r.createdAt?new Date(r.createdAt).toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'}):'';
+    let ph='-';
+    if(r.photos&&r.photos.length)ph=r.photos.map(p=>'<img class="table-thumb" src="'+esc(p)+'" onclick="event.stopPropagation();openModal(\''+esc(p)+'\')" title="点击放大">').join('');
+    tr.innerHTML='<td nowrap>'+r.date+'<br><small style="color:var(--muted)">'+tm+'</small></td><td nowrap>'+esc(r.name)+'</td><td>'+ph+'</td><td>'+esc(r.breakfast||'-')+'</td><td>'+esc(r.lunch||'-')+'</td><td>'+esc(r.dinner||'-')+'</td><td>'+esc(r.snacks||'-')+'</td><td nowrap>'+esc(r.water||'-')+'</td><td nowrap>'+t+'</td><td style="max-width:120px;">'+esc(r.mood||'-')+'</td><td>'+(del?'<button class="delete-btn" onclick="deleteRecord(\''+r.id+'\')">×</button>':'')+'</td>';
     tableBody.appendChild(tr);
   });
-
-  tableWrap.style.display = 'block'; emptyState.style.display = 'none';
+  tableWrap.style.display='block';emptyState.style.display='none';
 }
 
-// ====== Delete ======
-async function deleteRecord(id) {
-  if (!confirm('确定要删除这条记录吗？')) return;
-  try {
-    const fetchRes = await fetch(`${API_BASE}/latest`, { headers: HEADERS });
-    if (!fetchRes.ok) throw new Error('fetch failed');
-    const json = await fetchRes.json();
-    let d = json.record;
-    if (Array.isArray(d)) d = { records: d };
-    if (!d || !d.records) d = { records: [] };
-    d.records = d.records.filter(r => r.id !== id);
-    const putRes = await fetch(API_BASE, { method: 'PUT', headers: HEADERS, body: JSON.stringify(d) });
-    if (!putRes.ok) throw new Error('put failed');
-    showToast('🗑️ 已删除');
-    await fetchRecords();
-  } catch (e) { console.error(e); showToast('❌ 删除失败'); }
+async function deleteRecord(id){
+  if(!confirm('删除这条记录？'))return;
+  try{
+    const fr=await fetch(API_BASE+'/latest',{headers:HEADERS});
+    if(!fr.ok)throw new Error('fetch');
+    const j=await fr.json();let d=j.record;if(Array.isArray(d))d={records:d};
+    if(!d||!d.records)d={records:[]};
+    d.records=d.records.filter(r=>r.id!==id);
+    const pr=await fetch(API_BASE,{method:'PUT',headers:HEADERS,body:JSON.stringify(d)});
+    if(!pr.ok)throw new Error('put');
+    showToast('已删除');await fetchRecords();
+  }catch(e){console.error(e);showToast('删除失败');}
 }
 
-// ====== Filter ======
-function applyFilter() { currentFilter = $('filterDate').value; renderTable(); }
-function clearFilter() { $('filterDate').value = ''; currentFilter = ''; renderTable(); }
-
-// ====== CSV Export ======
-function exportCSV() {
-  const rows = [['日期','谁','早餐','午餐','晚餐','加餐','饮水','标签','心情','照片数','提交时间']];
-  allRecords.sort((a,b) => (b.createdAt||'').localeCompare(a.createdAt||''));
-  allRecords.forEach(r => {
-    rows.push([
-      r.date, r.name, r.breakfast||'', r.lunch||'', r.dinner||'',
-      r.snacks||'', r.water||'', r.tag||'', r.mood||'',
-      (r.photos ? r.photos.length : 0) + '张',
-      r.createdAt ? new Date(r.createdAt).toLocaleString('zh-CN') : ''
-    ]);
-  });
-  const csv = rows.map(row => row.map(c => '"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
-  const blob = new Blob(['\uFEFF'+csv], { type: 'text/csv;charset=utf-8;' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a'); a.href = url;
-  a.download = `饮食记录_${new Date().toISOString().slice(0,10)}.csv`; a.click();
-  URL.revokeObjectURL(url);
-  showToast('📥 CSV 已下载（照片未包含在 CSV 中）');
+function applyFilter(){currentFilter=$('filterDate').value;renderTable();}
+function clearFilter(){$('filterDate').value='';currentFilter='';renderTable();}
+function exportCSV(){
+  const rows=[['日期','姓名','早餐','午餐','晚餐','加餐','饮水','标签','备注','照片数','时间']];
+  allRecords.sort((a,b)=>(b.createdAt||'').localeCompare(a.createdAt||''));
+  allRecords.forEach(r=>rows.push([r.date,r.name,r.breakfast||'',r.lunch||'',r.dinner||'',r.snacks||'',r.water||'',r.tag||'',r.mood||'',r.photos?r.photos.length+'张':'0',r.createdAt?new Date(r.createdAt).toLocaleString('zh-CN'):'']));
+  const csv=rows.map(row=>row.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
+  const b=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(b),a=document.createElement('a');
+  a.href=url;a.download='饮食记录_'+new Date().toISOString().slice(0,10)+'.csv';a.click();
+  URL.revokeObjectURL(url);showToast('CSV 已下载');
 }
-
-function escHtml(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
-function escAttr(s) { return s.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
 </script>
-
 </body>
 </html>
