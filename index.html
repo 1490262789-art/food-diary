@@ -6,11 +6,11 @@
 <meta name="color-scheme" content="light only">
 <title>饮食日记</title>
 <style>
-  html{color-scheme:light only;forced-color-adjust:none;-webkit-color-scheme:light}
+  html{color-scheme:light only;forced-color-adjust:none;-webkit-color-scheme:light;background-color:#fff!important}
   *{margin:0;padding:0;box-sizing:border-box}
-  body,input,textarea,select,button{font-family:-apple-system,'PingFang SC',sans-serif;font-size:16px;background-color:#fff;color:#111;caret-color:#111}
+  body,input,textarea,select,button,td,th{font-family:-apple-system,'PingFang SC',sans-serif;font-size:16px;background-color:#fff!important;color:#111!important;caret-color:#111}
   body{line-height:1.8;max-width:600px;margin:0 auto;padding:24px 16px 80px;-webkit-tap-highlight-color:transparent}
-  h1{font-size:1.2em;font-weight:600;margin-bottom:28px;color:#111}
+  h1{font-size:1.2em;font-weight:600;margin-bottom:28px;color:#111!important}
   .row{display:flex;gap:12px;align-items:center;margin-bottom:16px}
   .row label{font-size:0.9em;color:#555;white-space:nowrap;min-width:40px}
   .row input,.row textarea,.row select{flex:1;border:none;border-bottom:1px solid #ccc;padding:10px 0;font-size:1em;outline:none;background-color:#fff;color:#111;border-radius:0;-webkit-appearance:none;appearance:none;resize:none}
@@ -97,6 +97,9 @@ const A='https://api.jsonbin.io/v3/b/'+B;
 const H={'X-Master-Key':K,'Content-Type':'application/json'};
 let R=[],F='',P=[];
 const Q=id=>document.getElementById(id);
+
+// Force light mode — override any browser dark mode
+(function(){var s=document.documentElement.style;s.setProperty('background-color','#fff','important');s.setProperty('color','#111','important');document.body.style.setProperty('background-color','#fff','important');document.body.style.setProperty('color','#111','important')})();
 
 Q('dt').value=new Date().toISOString().slice(0,10);
 Q('un').value=localStorage.getItem('fdn')||'';
