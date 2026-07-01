@@ -5,406 +5,143 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>饮食日记</title>
 <style>
-  :root {
-    --bg: #faf8f4; --card: #ffffff; --border: #e5dfd5;
-    --text: #3a3835; --muted: #9c9487; --accent: #7b6e5d;
-    --input-bg: #f6f3ed; --shadow: 0 1px 3px rgba(0,0,0,0.04);
-    --radius: 2px;
-  }
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body {
-    font-family: -apple-system, 'PingFang SC', 'Hiragino Sans', 'Microsoft YaHei', sans-serif;
-    background: var(--bg); color: var(--text); line-height: 1.8; min-height: 100vh;
-    font-weight: 300; letter-spacing: 0.02em;
-  }
-  header {
-    background: var(--card); border-bottom: 1px solid var(--border);
-    padding: 28px 16px 22px; text-align: center;
-    position: sticky; top: 0; z-index: 100;
-  }
-  header h1 { font-size: 1.1em; font-weight: 400; letter-spacing: 0.08em; color: var(--text); }
-  header .byline { font-size: 0.75em; color: var(--muted); margin-top: 4px; letter-spacing: 0.04em; }
-
-  .name-bar {
-    background: var(--card); border-bottom: 1px solid var(--border);
-    padding: 12px 20px; display: flex; align-items: center; gap: 12px;
-    position: sticky; top: 92px; z-index: 99;
-  }
-  .name-bar label { font-size: 0.82em; color: var(--muted); white-space: nowrap; }
-  .name-bar input {
-    flex: 1; border: none; border-bottom: 1px solid var(--border);
-    padding: 6px 0; font-size: 0.9em; outline: none; background: transparent;
-    color: var(--text); font-family: inherit; letter-spacing: 0.04em;
-    border-radius: 0;
-  }
-  .name-bar input:focus { border-bottom-color: var(--accent); }
-  .name-bar .badge {
-    color: var(--muted); font-size: 0.75em; font-weight: 400;
-    padding: 2px 10px; border: 1px solid var(--border);
-  }
-
-  .container { max-width: 640px; margin: 0 auto; padding: 24px 20px; }
-  .section { margin-bottom: 32px; }
-  .section-title {
-    font-size: 0.85em; font-weight: 400; color: var(--muted);
-    margin-bottom: 16px; letter-spacing: 0.06em; text-transform: uppercase;
-  }
-
-  .form-card {
-    background: var(--card); padding: 24px 20px;
-    box-shadow: var(--shadow); border: 1px solid var(--border);
-  }
-  .form-row { margin-bottom: 18px; }
-  .form-label {
-    display: block; font-size: 0.75em; color: var(--muted);
-    margin-bottom: 6px; letter-spacing: 0.05em;
-  }
-  .form-input, .form-textarea, .form-select {
-    width: 100%; border: none; border-bottom: 1px solid var(--border);
-    padding: 8px 0; font-size: 0.9em; font-family: inherit;
-    background: transparent; color: var(--text);
-    outline: none; border-radius: 0;
-    letter-spacing: 0.03em; resize: vertical;
-  }
-  .form-input:focus, .form-textarea:focus, .form-select:focus { border-bottom-color: var(--accent); }
-  .form-textarea { min-height: 40px; }
-  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 20px; }
-
-  .btn {
-    padding: 12px 24px; border: 1px solid var(--border); background: var(--card);
-    font-size: 0.85em; cursor: pointer; font-family: inherit;
-    letter-spacing: 0.06em; color: var(--text); transition: all 0.2s;
-    border-radius: var(--radius);
-  }
-  .btn:hover { border-color: var(--accent); }
-  .btn:active { background: #f5f2ed; }
-  .btn-primary {
-    width: 100%; background: var(--accent); color: #fff; border: none;
-    padding: 14px; margin-top: 8px; letter-spacing: 0.08em;
-  }
-  .btn-primary:hover { background: #6b5f52; }
-  .btn-sm { padding: 6px 14px; font-size: 0.78em; width: auto; }
-
-  /* Photo */
-  .photo-area {
-    border: 1px dashed var(--border); padding: 18px; text-align: center; cursor: pointer;
-    background: var(--input-bg); transition: background 0.2s;
-  }
-  .photo-area:hover { background: #eeebe5; }
-  .photo-area span { display: block; color: var(--muted); font-size: 0.82em; letter-spacing: 0.04em; }
-  .photo-area span:first-child { font-size: 1.8em; margin-bottom: 2px; }
-  .photo-preview { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
-  .photo-preview .thumb {
-    width: 56px; height: 56px; object-fit: cover; cursor: pointer;
-    border: 1px solid var(--border);
-  }
-  .photo-preview .thumb-wrap { position: relative; }
-  .photo-preview .remove-btn {
-    position: absolute; top: -6px; right: -6px;
-    background: var(--text); color: #fff; border: none;
-    width: 18px; height: 18px; font-size: 0.65em; cursor: pointer;
-    border-radius: 50%; line-height: 18px; text-align: center;
-  }
-
-  /* Modal */
-  .modal-overlay {
-    position: fixed; top:0; left:0; width:100%; height:100%;
-    background: rgba(58,56,53,0.92); z-index: 9999; display: flex;
-    align-items: center; justify-content: center; cursor: pointer;
-  }
-  .modal-overlay img { max-width: 95%; max-height: 90%; }
-
-  /* Status */
-  .status-msg { text-align: center; padding: 32px 20px; color: var(--muted); font-size: 0.85em; }
-  .spinner {
-    display: inline-block; width: 16px; height: 16px; border: 1px solid var(--border);
-    border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite;
-    margin-right: 8px; vertical-align: middle;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .toast {
-    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
-    background: #3a3835; color: #faf8f4; padding: 10px 24px;
-    font-size: 0.82em; z-index: 9998; opacity: 0; transition: opacity 0.3s;
-    pointer-events: none; letter-spacing: 0.04em;
-  }
-  .toast.show { opacity: 1; }
-
-  /* Filter */
-  .filter-bar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 16px; }
-  .filter-bar input[type="date"] {
-    border: 1px solid var(--border); padding: 6px 12px; font-size: 0.82em;
-    background: var(--card); outline: none; font-family: inherit; color: var(--text);
-  }
-  .filter-bar input[type="date"]:focus { border-color: var(--accent); }
-
-  /* Table */
-  .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-  table {
-    width: 100%; border-collapse: collapse; font-size: 0.78em;
-    background: var(--card); box-shadow: var(--shadow); border: 1px solid var(--border);
-  }
-  thead { background: #f5f2ed; }
-  th {
-    text-align: left; padding: 10px 10px; color: var(--muted); font-weight: 400;
-    font-size: 0.85em; white-space: nowrap; letter-spacing: 0.04em;
-  }
-  td { padding: 10px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
-  tr:last-child td { border-bottom: none; }
-  tr:hover td { background: #faf8f5; }
-
-  .tag-badge {
-    display: inline-block; padding: 1px 8px; font-size: 0.8em;
-    border: 1px solid var(--border); white-space: nowrap;
-  }
-  .table-thumb {
-    width: 36px; height: 36px; object-fit: cover; cursor: pointer;
-  }
-  .delete-btn {
-    background: none; border: none; cursor: pointer; font-size: 0.9em;
-    color: var(--muted); padding: 2px 4px; transition: color 0.2s;
-  }
-  .delete-btn:hover { color: #c44; }
-
-  .empty-state { text-align: center; padding: 48px 20px; color: var(--muted); }
-  .empty-state .icon { font-size: 2em; margin-bottom: 10px; opacity: 0.4; }
-
-  footer { text-align: center; padding: 32px 20px; color: var(--muted); font-size: 0.72em; letter-spacing: 0.06em; }
-
-  @media (max-width: 480px) {
-    header h1 { font-size: 1em; }
-    .form-grid { grid-template-columns: 1fr; }
-    th, td { padding: 8px 6px; font-size: 0.73em; }
-    .name-bar { top: 78px; }
-  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:-apple-system,'PingFang SC',sans-serif;background:#fff;color:#222;line-height:1.6;max-width:600px;margin:0 auto;padding:20px 16px 60px}
+  h1{font-size:1.1em;font-weight:500;margin-bottom:24px;color:#111}
+  .row{display:flex;gap:10px;align-items:center;margin-bottom:16px}
+  .row label{font-size:0.85em;color:#666;white-space:nowrap;min-width:40px}
+  .row input,.row textarea,.row select{flex:1;border:none;border-bottom:1px solid #ddd;padding:8px 0;font-size:0.9em;outline:none;font-family:inherit;background:transparent;border-radius:0;resize:none}
+  .row input:focus,.row textarea:focus,.row select:focus{border-bottom-color:#333}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
+  .btn{border:1px solid #333;background:#fff;padding:10px 20px;font-size:0.85em;cursor:pointer;font-family:inherit;border-radius:0}
+  .btn:active{background:#f5f5f5}
+  .btn-full{width:100%;background:#222;color:#fff;border:none;padding:12px;font-size:0.9em;margin-top:8px}
+  .photo-row{display:flex;align-items:center;gap:8px;margin:10px 0}
+  .photo-add{border:1px dashed #bbb;padding:12px 16px;text-align:center;cursor:pointer;font-size:0.82em;color:#888;flex:1}
+  .photo-add:hover{background:#fafafa}
+  .thumbs{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+  .thumbs img{width:48px;height:48px;object-fit:cover}
+  .thumbs .wrap{position:relative}
+  .thumbs .rm{position:absolute;top:-6px;right:-6px;background:#333;color:#fff;border:none;width:16px;height:16px;font-size:0.6em;border-radius:50%;cursor:pointer}
+  .modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:999;display:flex;align-items:center;justify-content:center;cursor:pointer}
+  .modal img{max-width:95%;max-height:90%}
+  .bar{display:flex;gap:8px;align-items:center;margin:24px 0 12px;flex-wrap:wrap}
+  .bar input[type=date]{border:1px solid #ddd;padding:4px 8px;font-size:0.82em;outline:none;font-family:inherit}
+  .bar a{font-size:0.82em;color:#666;cursor:pointer;text-decoration:underline}
+  table{width:100%;border-collapse:collapse;font-size:0.78em}
+  th{text-align:left;padding:8px 6px;border-bottom:1px solid #ddd;color:#888;font-weight:400;font-size:0.8em;white-space:nowrap}
+  td{padding:8px 6px;border-bottom:1px solid #f0f0f0;vertical-align:top}
+  tr:hover td{background:#fafafa}
+  .timg{width:32px;height:32px;object-fit:cover;cursor:pointer}
+  .badge{display:inline-block;border:1px solid #ddd;padding:0 6px;font-size:0.8em}
+  .empty{text-align:center;padding:40px;color:#aaa;font-size:0.85em}
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:8px 20px;font-size:0.82em;z-index:998;opacity:0;transition:opacity .3s}
+  .toast.on{opacity:1}
+  .spin{display:inline-block;width:14px;height:14px;border:1px solid #ddd;border-top-color:#333;border-radius:50%;animation:sp .6s linear infinite;margin-right:6px;vertical-align:middle}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  @media(max-width:400px){.grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 
-<header>
-  <h1>饮食日记</h1>
-  <div class="byline">记录每一餐</div>
-</header>
+<h1>饮食日记</h1>
 
-<div class="name-bar">
-  <label for="userName">姓名</label>
-  <input type="text" id="userName" placeholder="输入你的名字" maxlength="10">
-  <span class="badge" id="nameBadge">-</span>
+<div class="row"><label for="un">名字</label><input id="un" placeholder="你的名字" maxlength="10"></div>
+<div class="row"><label for="dt">日期</label><input type="date" id="dt"></div>
+
+<div class="grid">
+  <div class="row"><label for="bf">早餐</label><input id="bf" placeholder="吃了什么"></div>
+  <div class="row"><label for="lu">午餐</label><input id="lu" placeholder="吃了什么"></div>
+  <div class="row"><label for="dn">晚餐</label><input id="dn" placeholder="吃了什么"></div>
+  <div class="row"><label for="sn">加餐</label><input id="sn" placeholder="零食/饮品"></div>
 </div>
 
-<div class="container">
+<div class="grid">
+  <div class="row"><label for="wt">饮水</label><input id="wt" placeholder="1500ml"></div>
+  <div class="row"><label for="tg">标签</label><select id="tg"><option value="">-</option><option>家常菜</option><option>外卖</option><option>甜品</option><option>重油重辣</option><option>清淡减脂</option><option>其他</option></select></div>
+</div>
 
-  <div class="section">
-    <div class="section-title">记录今日</div>
-    <div class="form-card">
-      <div class="form-row">
-        <label class="form-label" for="recordDate">日期</label>
-        <input type="date" class="form-input" id="recordDate">
-      </div>
-      <div class="form-grid">
-        <div class="form-row"><label class="form-label" for="breakfast">早餐</label><textarea class="form-textarea" id="breakfast" placeholder="吃了什么" rows="1"></textarea></div>
-        <div class="form-row"><label class="form-label" for="lunch">午餐</label><textarea class="form-textarea" id="lunch" placeholder="吃了什么" rows="1"></textarea></div>
-        <div class="form-row"><label class="form-label" for="dinner">晚餐</label><textarea class="form-textarea" id="dinner" placeholder="吃了什么" rows="1"></textarea></div>
-        <div class="form-row"><label class="form-label" for="snacks">加餐</label><textarea class="form-textarea" id="snacks" placeholder="零食/饮品" rows="1"></textarea></div>
-      </div>
-      <div class="form-grid">
-        <div class="form-row">
-          <label class="form-label" for="water">饮水</label>
-          <input type="text" class="form-input" id="water" placeholder="1500ml">
-        </div>
-        <div class="form-row">
-          <label class="form-label" for="foodTag">标签</label>
-          <select class="form-select" id="foodTag">
-            <option value="">-</option>
-            <option value="家常菜">家常菜</option>
-            <option value="外卖">外卖</option>
-            <option value="甜品">甜品</option>
-            <option value="重油重辣">重油重辣</option>
-            <option value="清淡减脂">清淡减脂</option>
-            <option value="其他">其他</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-row">
-        <label class="form-label">照片（可多张·自动压缩）</label>
-        <div class="photo-area" onclick="document.getElementById('photoInput').click()">
-          <span>＋</span>
-          <span>拍照或选择照片</span>
-        </div>
-        <input type="file" id="photoInput" accept="image/*" capture="environment" multiple onchange="handlePhotos(this)" style="display:none;">
-        <div class="photo-preview" id="photoPreview"></div>
-      </div>
-      <div class="form-row">
-        <label class="form-label" for="mood">备注</label>
-        <textarea class="form-textarea" id="mood" placeholder="想说的话" rows="1"></textarea>
-      </div>
-      <button class="btn btn-primary" id="submitBtn" onclick="submitRecord()">保存记录</button>
-    </div>
+<div><div class="photo-add" onclick="document.getElementById('pi').click()">＋ 拍照 / 选择照片</div></div>
+<input type="file" id="pi" accept="image/*" capture="environment" multiple onchange="hp(this)" style="display:none">
+<div class="thumbs" id="pv"></div>
+
+<div class="row"><label for="mo">备注</label><input id="mo" placeholder="想说的话"></div>
+
+<button class="btn btn-full" id="sb" onclick="sm()">保存</button>
+
+<div style="margin-top:32px">
+  <div class="bar">
+    <input type="date" id="fd" onchange="af()">
+    <a onclick="cf()">清除</a>
+    <a onclick="ex()">导出</a>
+    <span style="margin-left:auto;font-size:0.78em;color:#aaa" id="rc"></span>
   </div>
-
-  <div class="section">
-    <div class="section-title">历史记录</div>
-    <div class="filter-bar">
-      <input type="date" id="filterDate" onchange="applyFilter()">
-      <button class="btn btn-sm" onclick="clearFilter()">清除筛选</button>
-      <button class="btn btn-sm" onclick="exportCSV()">导出 CSV</button>
-      <span style="margin-left:auto;font-size:0.78em;color:var(--muted);" id="recordCount"></span>
-    </div>
-    <div id="loadingMsg" class="status-msg"><span class="spinner"></span>加载中</div>
-    <div class="table-wrap" id="tableWrap" style="display:none;">
-      <table>
-        <thead><tr><th>日期</th><th>姓名</th><th>照片</th><th>早餐</th><th>午餐</th><th>晚餐</th><th>加餐</th><th>饮水</th><th>标签</th><th>备注</th><th></th></tr></thead>
-        <tbody id="tableBody"></tbody>
-      </table>
-    </div>
-    <div class="empty-state" id="emptyState" style="display:none;"><div class="icon">—</div><p>暂无记录</p></div>
+  <div id="ld"><span class="spin"></span>加载中</div>
+  <div style="overflow-x:auto" id="tw" hidden>
+    <table><thead><tr><th>日期</th><th>名字</th><th>照片</th><th>早餐</th><th>午餐</th><th>晚餐</th><th>加餐</th><th>饮水</th><th>标签</th><th>备注</th><th></th></tr></thead><tbody id="tb"></tbody></table>
   </div>
-
+  <div class="empty" id="em" hidden>暂无记录</div>
 </div>
 
-<div class="toast" id="toast"></div>
-<div class="modal-overlay" id="imageModal" style="display:none;" onclick="closeModal()">
-  <img id="modalImg" src="" alt="">
-</div>
-
-<footer>饮食日记 · v2</footer>
+<div class="toast" id="ts"></div>
+<div class="modal" id="md" hidden onclick="this.hidden=true"><img id="mi"></div>
 
 <script>
-const JSONBIN_API_KEY = '$2a$10$LaFzu8ik4tTzNy35YLBF1OcoTogoIbWJUQ4/SpkQ.0M3UUhjGeyRO';
-const JSONBIN_BIN_ID  = '6a453823f5f4af5e294e5db2';
-const API_BASE = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`;
-const HEADERS = { 'X-Master-Key': JSONBIN_API_KEY, 'Content-Type': 'application/json' };
+const K='$2a$10$LaFzu8ik4tTzNy35YLBF1OcoTogoIbWJUQ4/SpkQ.0M3UUhjGeyRO';
+const B='6a453823f5f4af5e294e5db2';
+const A='https://api.jsonbin.io/v3/b/'+B;
+const H={'X-Master-Key':K,'Content-Type':'application/json'};
+let R=[],F='',P=[];
+const Q=id=>document.getElementById(id);
 
-let allRecords=[],currentFilter='',pendingPhotos=[];
-const $=id=>document.getElementById(id);
-const submitBtn=$('submitBtn'),tableBody=$('tableBody'),tableWrap=$('tableWrap');
-const emptyState=$('emptyState'),loadingMsg=$('loadingMsg'),recordCount=$('recordCount'),toast=$('toast');
+Q('dt').value=new Date().toISOString().slice(0,10);
+Q('un').value=localStorage.getItem('fdn')||'';
+Q('un').oninput=()=>localStorage.setItem('fdn',Q('un').value.trim());
+fr();
 
-$('recordDate').value=new Date().toISOString().slice(0,10);
-$('userName').value=localStorage.getItem('foodDiary_name')||'';
-updateNameBadge();
-fetchRecords();
-$('userName').addEventListener('input',()=>{localStorage.setItem('foodDiary_name',$('userName').value.trim());updateNameBadge();});
-function updateNameBadge(){const n=$('userName').value.trim();$('nameBadge').textContent=n||'-';}
+let tt;
+function tx(m){const t=Q('ts');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),2000)}
 
-let toastTimer;
-function showToast(msg){toast.textContent=msg;toast.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.classList.remove('show'),2200);}
-
-function handlePhotos(input){
-  const files=Array.from(input.files);if(!files.length)return;
-  if(pendingPhotos.length+files.length>5){showToast('最多5张照片');input.value='';return;}
-  showToast('压缩中');
-  let done=0;
-  files.forEach(file=>{
-    const r=new FileReader();
-    r.onload=function(e){
-      const img=new Image();
-      img.onload=function(){
-        const c=document.createElement('canvas'),max=400;
-        let w=img.width,h=img.height;
-        if(w>h&&w>max){h=h*max/w;w=max;}else if(h>max){w=w*max/h;h=max;}
-        c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);
-        pendingPhotos.push(c.toDataURL('image/jpeg',0.6));
-        done++;if(done===files.length){renderPreview();showToast('已压缩');}
-      };img.src=e.target.result;
-    };r.readAsDataURL(file);
-  });input.value='';
+function hp(i){
+  const fs=Array.from(i.files);if(!fs.length)return;
+  if(P.length+fs.length>5){tx('最多5张');i.value='';return}
+  tx('压缩中');let d=0;
+  fs.forEach(f=>{const r=new FileReader();r.onload=function(e){const im=new Image();im.onload=function(){const c=document.createElement('canvas'),x=400;let w=im.width,h=im.height;if(w>h&&w>x){h=h*x/w;w=x}else if(h>x){w=w*x/h;h=x}c.width=w;c.height=h;c.getContext('2d').drawImage(im,0,0,w,h);P.push(c.toDataURL('image/jpeg',0.6));d++;if(d===fs.length){rp();tx('已压缩')}};im.src=e.target.result};r.readAsDataURL(f)});i.value=''
 }
-function renderPreview(){$('photoPreview').innerHTML=pendingPhotos.map((p,i)=>'<div class="thumb-wrap"><img class="thumb" src="'+p+'" onclick="event.stopPropagation();openModal(\''+p+'\')"><button class="remove-btn" onclick="event.stopPropagation();removePhoto('+i+')">×</button></div>').join('');}
-function removePhoto(i){pendingPhotos.splice(i,1);renderPreview();}
-function openModal(s){$('modalImg').src=s;$('imageModal').style.display='flex';}
-function closeModal(){$('imageModal').style.display='none';}
+function rp(){Q('pv').innerHTML=P.map((p,i)=>'<div class="wrap"><img src="'+p+'" onclick="event.stopPropagation();mo(\''+p+'\')"><button class="rm" onclick="event.stopPropagation();rp2('+i+')">×</button></div>').join('')}
+function rp2(i){P.splice(i,1);rp()}
+function mo(s){Q('mi').src=s;Q('md').hidden=false}
 
-async function fetchRecords(){
-  loadingMsg.style.display='block';tableWrap.style.display='none';emptyState.style.display='none';
-  try{
-    const res=await fetch(API_BASE+'/latest',{headers:HEADERS});
-    if(!res.ok)throw new Error(res.status);
-    const j=await res.json();
-    allRecords=(j.record&&j.record.records)?j.record.records:[];
-  }catch(e){console.error(e);allRecords=[];showToast('加载失败');}
-  renderTable();
+async function fr(){
+  Q('ld').hidden=false;Q('tw').hidden=true;Q('em').hidden=true;
+  try{const r=await fetch(A+'/latest',{headers:H});if(!r.ok)throw 0;const j=await r.json();R=(j.record&&j.record.records)?j.record.records:[]}catch(e){R=[]}
+  rt()
 }
 
-async function submitRecord(){
-  const name=$('userName').value.trim();
-  if(!name){showToast('请输入姓名');return;}
-  const record={
-    id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),
-    date:$('recordDate').value,name,
-    breakfast:$('breakfast').value.trim(),lunch:$('lunch').value.trim(),
-    dinner:$('dinner').value.trim(),snacks:$('snacks').value.trim(),
-    water:$('water').value.trim(),tag:$('foodTag').value,
-    mood:$('mood').value.trim(),photos:[...pendingPhotos],
-    createdAt:new Date().toISOString()
-  };
-  if(!record.date){showToast('请选择日期');return;}
-  if(!record.breakfast&&!record.lunch&&!record.dinner&&!record.snacks&&!record.photos.length){showToast('至少填一项');return;}
-  submitBtn.disabled=true;submitBtn.textContent='保存中';
-  try{
-    const fr=await fetch(API_BASE+'/latest',{headers:HEADERS});
-    let d=fr.ok?(await fr.json()).record:{records:[]};
-    if(Array.isArray(d))d={records:d};
-    if(!d||!d.records)d={records:[]};
-    d.records.push(record);
-    const pr=await fetch(API_BASE,{method:'PUT',headers:HEADERS,body:JSON.stringify(d)});
-    if(!pr.ok)throw new Error(pr.status);
-    allRecords.push(record);
-    ['breakfast','lunch','dinner','snacks','water','mood'].forEach(id=>$(id).value='');
-    $('foodTag').value='';pendingPhotos=[];$('photoPreview').innerHTML='';
-    renderTable();
-    showToast('已保存');
-  }catch(e){console.error(e);showToast('保存失败，请检查网络');}
-  submitBtn.disabled=false;submitBtn.textContent='保存记录';
+async function sm(){
+  const n=Q('un').value.trim();if(!n){tx('请输入名字');return}
+  const o={id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),date:Q('dt').value,name:n,breakfast:Q('bf').value.trim(),lunch:Q('lu').value.trim(),dinner:Q('dn').value.trim(),snacks:Q('sn').value.trim(),water:Q('wt').value.trim(),tag:Q('tg').value,mood:Q('mo').value.trim(),photos:[...P],createdAt:new Date().toISOString()};
+  if(!o.date){tx('请选择日期');return}
+  if(!o.breakfast&&!o.lunch&&!o.dinner&&!o.snacks&&!o.photos.length){tx('至少填一项');return}
+  Q('sb').disabled=true;Q('sb').textContent='保存中';
+  try{const r=await fetch(A+'/latest',{headers:H});let d=r.ok?(await r.json()).record:{records:[]};if(Array.isArray(d))d={records:d};if(!d||!d.records)d={records:[]};d.records.push(o);const p=await fetch(A,{method:'PUT',headers:H,body:JSON.stringify(d)});if(!p.ok)throw 0;R.push(o);['bf','lu','dn','sn','wt','mo'].forEach(id=>Q(id).value='');Q('tg').value='';P=[];Q('pv').innerHTML='';rt();tx('已保存')}catch(e){tx('保存失败')}
+  Q('sb').disabled=false;Q('sb').textContent='保存'
 }
 
-function renderTable(){
-  tableBody.innerHTML='';loadingMsg.style.display='none';
-  let recs=[...allRecords];
-  if(currentFilter)recs=recs.filter(r=>r.date===currentFilter);
-  recs.sort((a,b)=>(b.date!==a.date?b.date.localeCompare(a.date):(b.createdAt||'').localeCompare(a.createdAt||'')));
-  recordCount.textContent=recs.length+' 条';
-  if(!recs.length){tableWrap.style.display='none';emptyState.style.display='block';return;}
-  const cn=$('userName').value.trim();
-  recs.forEach(r=>{
-    const tr=document.createElement('tr'),del=r.name===cn;
-    const t=r.tag?'<span class="tag-badge">'+esc(r.tag)+'</span>':'';
-    const tm=r.createdAt?new Date(r.createdAt).toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'}):'';
-    let ph='-';
-    if(r.photos&&r.photos.length)ph=r.photos.map(p=>'<img class="table-thumb" src="'+esc(p)+'" onclick="event.stopPropagation();openModal(\''+esc(p)+'\')" title="点击放大">').join('');
-    tr.innerHTML='<td nowrap>'+r.date+'<br><small style="color:var(--muted)">'+tm+'</small></td><td nowrap>'+esc(r.name)+'</td><td>'+ph+'</td><td>'+esc(r.breakfast||'-')+'</td><td>'+esc(r.lunch||'-')+'</td><td>'+esc(r.dinner||'-')+'</td><td>'+esc(r.snacks||'-')+'</td><td nowrap>'+esc(r.water||'-')+'</td><td nowrap>'+t+'</td><td style="max-width:120px;">'+esc(r.mood||'-')+'</td><td>'+(del?'<button class="delete-btn" onclick="deleteRecord(\''+r.id+'\')">×</button>':'')+'</td>';
-    tableBody.appendChild(tr);
-  });
-  tableWrap.style.display='block';emptyState.style.display='none';
+function rt(){
+  Q('ld').hidden=true;let rs=[...R];if(F)rs=rs.filter(r=>r.date===F);rs.sort((a,b)=>(b.date!==a.date?b.date.localeCompare(a.date):(b.createdAt||'').localeCompare(a.createdAt||'')));Q('rc').textContent=rs.length+' 条';
+  if(!rs.length){Q('tw').hidden=true;Q('em').hidden=false;return}
+  Q('em').hidden=true;Q('tw').hidden=false;
+  const cn=Q('un').value.trim();
+  Q('tb').innerHTML=rs.map(r=>{const d=r.name===cn,ph=r.photos&&r.photos.length?r.photos.map(p=>'<img class="timg" src="'+e(p)+'" onclick="event.stopPropagation();mo(\''+e(p)+'\')">').join(''):'-';const t=r.tag?'<span class="badge">'+e(r.tag)+'</span>':'';const tm=r.createdAt?new Date(r.createdAt).toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'}):'';return'<tr><td nowrap>'+r.date+'<br><small style=color:#aaa>'+tm+'</small></td><td nowrap>'+e(r.name)+'</td><td>'+ph+'</td><td>'+e(r.breakfast||'-')+'</td><td>'+e(r.lunch||'-')+'</td><td>'+e(r.dinner||'-')+'</td><td>'+e(r.snacks||'-')+'</td><td nowrap>'+e(r.water||'-')+'</td><td nowrap>'+t+'</td><td style=max-width:100px>'+e(r.mood||'-')+'</td><td>'+(d?'<button onclick=dl(\"'+r.id+'\") style=background:none;border:none;cursor:pointer;color:#ccc;font-size:1.2em>×</button>':'')+'</td></tr>'}).join('')
 }
 
-async function deleteRecord(id){
-  if(!confirm('删除这条记录？'))return;
-  try{
-    const fr=await fetch(API_BASE+'/latest',{headers:HEADERS});
-    if(!fr.ok)throw new Error('fetch');
-    const j=await fr.json();let d=j.record;if(Array.isArray(d))d={records:d};
-    if(!d||!d.records)d={records:[]};
-    d.records=d.records.filter(r=>r.id!==id);
-    const pr=await fetch(API_BASE,{method:'PUT',headers:HEADERS,body:JSON.stringify(d)});
-    if(!pr.ok)throw new Error('put');
-    showToast('已删除');allRecords=allRecords.filter(r=>r.id!==id);renderTable();
-  }catch(e){console.error(e);showToast('删除失败');}
-}
+async function dl(id){if(!confirm('删除？'))return;try{const r=await fetch(A+'/latest',{headers:H});if(!r.ok)throw 0;const j=await r.json();let d=j.record;if(Array.isArray(d))d={records:d};if(!d||!d.records)d={records:[]};d.records=d.records.filter(r=>r.id!==id);const p=await fetch(A,{method:'PUT',headers:H,body:JSON.stringify(d)});if(!p.ok)throw 0;R=R.filter(r=>r.id!==id);rt();tx('已删除')}catch(e){tx('删除失败')}}
 
-function applyFilter(){currentFilter=$('filterDate').value;renderTable();}
-function clearFilter(){$('filterDate').value='';currentFilter='';renderTable();}
-function exportCSV(){
-  const rows=[['日期','姓名','早餐','午餐','晚餐','加餐','饮水','标签','备注','照片数','时间']];
-  allRecords.sort((a,b)=>(b.createdAt||'').localeCompare(a.createdAt||''));
-  allRecords.forEach(r=>rows.push([r.date,r.name,r.breakfast||'',r.lunch||'',r.dinner||'',r.snacks||'',r.water||'',r.tag||'',r.mood||'',r.photos?r.photos.length+'张':'0',r.createdAt?new Date(r.createdAt).toLocaleString('zh-CN'):'']));
-  const csv=rows.map(row=>row.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
-  const b=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});
-  const url=URL.createObjectURL(b),a=document.createElement('a');
-  a.href=url;a.download='饮食记录_'+new Date().toISOString().slice(0,10)+'.csv';a.click();
-  URL.revokeObjectURL(url);showToast('CSV 已下载');
-}
-function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+function af(){F=Q('fd').value;rt()}
+function cf(){Q('fd').value='';F='';rt()}
+function ex(){const rs=[['日期','名字','早餐','午餐','晚餐','加餐','饮水','标签','备注','照片数','时间']];R.sort((a,b)=>(b.createdAt||'').localeCompare(a.createdAt||''));R.forEach(r=>rs.push([r.date,r.name,r.breakfast||'',r.lunch||'',r.dinner||'',r.snacks||'',r.water||'',r.tag||'',r.mood||'',r.photos?r.photos.length+'张':'0',r.createdAt?new Date(r.createdAt).toLocaleString('zh-CN'):'']));const csv=rs.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');const b=new Blob(['\uFEFF'+csv],{type:'text/csv'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download='饮食记录.csv';a.click();URL.revokeObjectURL(u)}
+function e(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
 </script>
 </body>
 </html>
