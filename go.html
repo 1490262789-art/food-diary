@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="color-scheme" content="light only">
+<title>饮食日记</title>
+<style>
+  :root{color-scheme:light only}
+  html{background:#fff!important}
+  body{background:#fff!important;color:#111!important;margin:0;padding:0}
+</style>
+</head>
+<body><p style="padding:40px;text-align:center;color:#aaa">加载中…</p>
+<script>
+(async()=>{
+const SHA='2bb1ef695e665eb75419837b504eae8b7def5233';
+const u='https://raw.githubusercontent.com/1490262789-art/food-diary/'+SHA+'/index.html';
+try{
+const r=await fetch(u);if(!r.ok)throw 0;
+let h=await r.text();
+const s=h.indexOf('<body>'),e=h.lastIndexOf('</body>');
+document.body.innerHTML=h.slice(s+6,e);
+const ss=h.indexOf('<style>'),se=h.indexOf('</style>',ss)+8;
+if(ss>=0&&se>ss){
+const st=document.createElement('style');st.textContent=h.slice(ss+7,se-8);
+document.head.appendChild(st);
+}
+const sc=h.indexOf('<script>'),sce=h.indexOf('</script>',sc)+9;
+if(sc>=0&&sce>sc){const el=document.createElement('script');el.textContent=h.slice(sc+8,sce-9);document.body.appendChild(el)}
+}catch(e){document.body.innerHTML='<p style=padding:40px;color:red>加载失败,请刷新</p>'}
+})();
+</script>
+</body>
+</html>
