@@ -349,10 +349,11 @@ async function submitRecord(){
     d.records.push(record);
     const pr=await fetch(API_BASE,{method:'PUT',headers:HEADERS,body:JSON.stringify(d)});
     if(!pr.ok)throw new Error(pr.status);
+    allRecords.push(record);
     ['breakfast','lunch','dinner','snacks','water','mood'].forEach(id=>$(id).value='');
     $('foodTag').value='';pendingPhotos=[];$('photoPreview').innerHTML='';
+    renderTable();
     showToast('已保存');
-    await fetchRecords();
   }catch(e){console.error(e);showToast('保存失败，请检查网络');}
   submitBtn.disabled=false;submitBtn.textContent='保存记录';
 }
@@ -387,7 +388,7 @@ async function deleteRecord(id){
     d.records=d.records.filter(r=>r.id!==id);
     const pr=await fetch(API_BASE,{method:'PUT',headers:HEADERS,body:JSON.stringify(d)});
     if(!pr.ok)throw new Error('put');
-    showToast('已删除');await fetchRecords();
+    showToast('已删除');allRecords=allRecords.filter(r=>r.id!==id);renderTable();
   }catch(e){console.error(e);showToast('删除失败');}
 }
 
